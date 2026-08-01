@@ -1,0 +1,6 @@
+create type public.ai_action as enum ('generate_supplier_purchase_order','generate_whatsapp_reminder','generate_customer_follow_up','generate_inventory_restock_plan','generate_weekly_sales_report','generate_gst_checklist');
+create type public.action_task_status as enum ('ready','running','completed','failed');
+create table public.action_tasks (id uuid primary key default gen_random_uuid(), user_id uuid not null references public.users(id) on delete cascade, recommendation_id uuid references public.growth_recommendations(id) on delete set null, action public.ai_action not null, title text not null, impact text not null, confidence numeric(4,3) not null check(confidence >= 0 and confidence <= 1), estimated_revenue numeric(12,2) not null check(estimated_revenue >= 0), priority public.priority not null, status public.action_task_status not null default 'ready', result jsonb, created_at timestamptz not null default now(), updated_at timestamptz not null default now());
+create index on public.action_tasks(user_id, status, priority, created_at desc);
+alter table public.action_tasks enable row level security;
+create policy "Action tasks access own data" on public.action_tasks for all using (auth.uid() = user_id) with check (auth.uid() = user_id);

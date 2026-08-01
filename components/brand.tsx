@@ -1,0 +1,2 @@
+import { Sparkles } from "lucide-react";
+export function Brand({ compact = false }: { compact?: boolean }) { return <div className="flex items-center gap-2.5"><div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-blue-600 to-emerald-500 text-white shadow-lg shadow-blue-500/20"><Sparkles size={18}/></div>{!compact && <span className="text-lg font-bold tracking-tight">Vyapaar<span className="text-blue-600">Sathi</span></span>}</div>; }

@@ -1,0 +1,8 @@
+import type { User, ID } from "@/types/domain";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { NotFoundError } from "@/lib/api/errors";
+const devUser: User = { id: process.env.DEV_USER_ID ?? "00000000-0000-4000-8000-000000000001", email:"owner@vyapaarsathi.dev", full_name:"Akshita", business_name:"VyapaarSathi Demo", phone:null, created_at:"2026-07-31T09:00:00.000Z", updated_at:"2026-07-31T09:00:00.000Z" };
+export class UserService { private mock = process.env.USE_MOCK_DATA === "true" || !process.env.NEXT_PUBLIC_SUPABASE_URL; async get(id: ID) { if (this.mock) { if (id !== devUser.id) throw new NotFoundError("User"); return devUser; } const {data,error}=await createSupabaseServerClient().from("users").select("*").eq("id",id).maybeSingle(); if(error) throw error; if(!data) throw new NotFoundError("User"); return data as User; } async create(
+  id: ID,
+  input: Partial<Omit<User, "id" | "created_at" | "updated_at">>
+) { if(this.mock) return {...devUser,...input,id}; const {data,error}=await createSupabaseServerClient().from("users").insert({id,...input}).select().single(); if(error) throw error; return data as User; } async update(id: ID, input: Partial<Omit<User,"id"|"email"|"created_at"|"updated_at">>) { if(this.mock) return {...devUser,...input,updated_at:new Date().toISOString()}; const {data,error}=await createSupabaseServerClient().from("users").update(input).eq("id",id).select().maybeSingle(); if(error) throw error; if(!data) throw new NotFoundError("User"); return data as User; } async delete(id: ID) { if(this.mock) return; const {error}=await createSupabaseServerClient().from("users").delete().eq("id",id); if(error) throw error; } }

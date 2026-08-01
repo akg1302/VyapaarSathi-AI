@@ -1,0 +1,6 @@
+import type { BusinessAgent, AgentContext } from "@/types/agent";
+import { result } from "./agent-utils";
+export class CustomerAgent implements BusinessAgent { readonly agentName="customer" as const; async execute(context: AgentContext) { const start=Date.now(); const customerTotals=new Map<string,number>(); for(const invoice of context.invoices.filter(i=>i.status==="paid"&&i.customer_id)) customerTotals.set(
+    invoice.customer_id!,
+    (customerTotals.get(invoice.customer_id!) ?? 0) + invoice.total_amount
+); const topCustomers=[...customerTotals.entries()].sort((a,b)=>b[1]-a[1]).slice(0,3).map(([id,total])=>({customer:context.customers.find(c=>c.id===id)?.name??"Unknown customer",total})); const uncontactable=context.customers.filter(c=>!c.phone&&!c.email); const recommendations=uncontactable.map(c=>({priority:"low" as const,title:`Complete ${c.name}'s contact details`,detail:"No phone number or email is recorded for this customer.",action:"Update customer"})); return result("customer",start,{customerCount:context.customers.length,activeCustomers:customerTotals.size,topCustomers,uncontactableCustomers:uncontactable.length},[`Evaluated ${context.customers.length} customer records.`,`${customerTotals.size} customers have paid invoice activity.`],recommendations,context.customers.length ? .9 : .72); } }

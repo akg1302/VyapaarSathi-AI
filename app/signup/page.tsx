@@ -1,0 +1,2 @@
+import Link from "next/link"; import { Brand } from "@/components/brand"; import { AuthForm } from "@/components/auth-form";
+export default function Signup(){return <main className="grid min-h-screen place-items-center bg-slate-50 p-6 dark:bg-[#080d18]"><div className="w-full max-w-md rounded-3xl bg-white p-8 shadow-panel dark:bg-slate-900 sm:p-10"><Link href="/"><Brand/></Link><h1 className="mt-8 text-3xl font-bold tracking-tight">Start growing smarter</h1><p className="mt-2 muted">Create your free VyapaarSathi AI account.</p><AuthForm signup/></div></main>}

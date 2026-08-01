@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { @apply border-slate-200 dark:border-slate-800; }
+  body { @apply bg-slate-50 font-sans text-slate-900 antialiased dark:bg-[#080d18] dark:text-slate-100; }
+}
+@layer components {
+  .panel { @apply rounded-2xl border bg-white shadow-panel dark:bg-slate-900/80; }
+  .page-title { @apply text-2xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-3xl; }
+  .muted { @apply text-sm text-slate-500 dark:text-slate-400; }
+  .btn-primary { @apply inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-950; }
+  .glass { @apply border border-white/60 bg-white/70 shadow-panel backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/60; }
+}
