@@ -1,40 +1,58 @@
 # VyapaarSathi AI
 
-A premium Next.js UI for an Indian MSME business assistant. This release intentionally uses realistic mock data; AI and Supabase workflows are not connected yet.
+> The AI Business Command Center for Indian MSMEs.
 
-## Run locally
+VyapaarSathi AI helps Kirana stores and other small businesses turn everyday operations into clear decisions. It brings sales, inventory, customers, invoices, expenses, reminders, business health, and AI-led action plans into one premium workspace.
 
-1. Install Node.js 20.9 or newer.
-2. Run `npm install`.
-3. Copy `.env.example` to `.env.local` when you are ready to connect Supabase.
-4. Run `npm run dev`.
+## Why it matters
 
-## Backend architecture
+Indian MSMEs often manage their business through scattered notebooks, WhatsApp messages, and spreadsheets. That creates blind spots: stockouts, delayed collections, unclear profitability, and missed growth opportunities. VyapaarSathi AI makes those signals visible and actionable.
 
-All endpoint responses use `{ data }` for success and `{ error: { message } }` for failures. During development, `USE_MOCK_DATA=true` uses an in-memory repository; it needs an `x-user-id` header (or `DEV_USER_ID`) to scope data.
+## Highlights
 
-| Resource | Collection | Item |
-| --- | --- | --- |
-| User profile | `GET/POST/PATCH/DELETE /api/users/me` | — |
-| Products, customers, invoices, sales, expenses, reminders, logs | `GET/POST /api/{resource}` | `GET/PATCH/DELETE /api/{resource}/:id` |
+- AI Business Command Center with health score, CEO brief, alerts, and opportunities
+- Deterministic specialist agents for inventory, finance, customers, reminders, analytics, and growth
+- AI Action Center for reviewable, one-click business workflows
+- Growth Advisor for cross-sell, upsell, bundle, seasonal, and product-movement ideas
+- Demo Mode with a complete Indian Kirana Store scenario
+- Presentation Mode for a polished hackathon walkthrough
+- PDF AI Business Report export
+- Supabase-ready clean backend architecture with mock mode for demos
 
-The Supabase schema, enums, indexes, RLS policies, and relationships are in `supabase/migrations/20260731_initial_schema.sql`. Apply it in the Supabase SQL editor or through the Supabase CLI before setting `USE_MOCK_DATA=false`.
+## Tech stack
 
-## Agent engine
+Next.js · TypeScript · Tailwind CSS · Supabase · OpenAI Responses API · Recharts · React Hook Form · Zod · Lucide · jsPDF
 
-`POST /api/run-business` runs inventory, finance, customer, reminder, and analytics agents sequentially through the manager agent. The response is a deterministic business report and each specialist result plus the consolidated report is persisted to `agent_logs`. The engine makes no OpenAI calls.
+## Quick start
 
-`POST /api/growth-advisor` runs a separate deterministic Growth Advisor. It identifies revenue opportunities, cross-sell and upsell ideas, bundles, seasonal suggestions, plus fast- and slow-moving products; recommendations are persisted in `growth_recommendations`.
+```bash
+npm install
+copy .env.example .env.local
+npm run dev
+```
 
-The **AI Action Center** turns those signals into persistent, reviewable work. It supports one-click simulated execution of purchase orders, follow-ups, reminders, restock plans, reports, and GST checklists; every completion is recorded in `agent_logs`.
+Open `http://localhost:3000` and select **Load Demo Business** on the dashboard for an instant Kirana Store demonstration.
 
-When `OPENAI_API_KEY` is configured, only the Manager Agent calls the OpenAI Responses API to turn completed specialist outputs into the CEO Brief. Responses use strict JSON-schema output, timeout and retry handling, and deterministic fallback. Every final brief is persisted in `ceo_briefs`.
+### Environment
 
-## Included
+```env
+USE_MOCK_DATA=true
+DEV_USER_ID=00000000-0000-4000-8000-000000000001
 
-- Next.js 15 App Router + TypeScript
-- Responsive dashboard navigation and dark mode
-- Landing, authentication, inventory, invoice, customer, report and agent-log screens
-- Recharts sales/inventory visualizations and React Hook Form + Zod authentication forms
-- A small Supabase client factory prepared for future auth/data integration
-- Clean API → service → repository layers with Zod contracts and mock repositories
+# Optional: enables Manager Agent synthesis through OpenAI
+OPENAI_API_KEY=
+OPENAI_MANAGER_MODEL=gpt-5.6
+OPENAI_MANAGER_TIMEOUT_MS=15000
+```
+
+When no API key is configured, the system uses deterministic, business-aware reasoning so every demo remains reliable.
+
+## Documentation
+
+The complete hackathon pack—including architecture, demo flow, two-minute pitch, innovation, future scope, and 20 judge questions—is in [docs/HACKATHON_SUBMISSION.md](docs/HACKATHON_SUBMISSION.md).
+
+API reference: [docs/api.md](docs/api.md).
+
+## License
+
+Released under the [MIT License](LICENSE).
